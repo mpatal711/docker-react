@@ -4,15 +4,43 @@ on:
     branches:
       - master
 
+permissions:
+  id-token: write
+  contents: read
+
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - name: Checkout code
+        uses: actions/checkout@v3
+
       - name: Login to Docker Hub
         uses: docker/login-action@v2
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}  # Use the access token here
-      - run: docker build -t mpatal/react-test -f Dockerfile.dev .
-      - run: docker run -e CI=true mpatal/react-test npm test
+
+      - name: Build and test
+        run: |
+          docker build -t mpatal/react-test -f Dockerfile.dev .
+          docker run -e CI=true mpatal/react-test npm test
+      
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v2
+        with:
+          role-to-assume: arn:aws:iam::${{ secrets.AWS_ACCOUNT_ID }}:role/GitHubActionsRole
+          aws-region: ca-central-1
+
+      - name: Generate deployment package
+        run: zip -r deploy.zip . -x '*.git*'
+
+      - name: Deploy to EB
+        uses: einaregilsson/beanstalk-deploy@v18
+        with:
+          application_name: frontend
+          environment_name: frontend-env
+          existing_bucket_name: elasticbeanstalk-ca-central-1-${{ secrets.AWS_ACCOUNT_ID }}
+          region: ca-central-1
+          version_label: ${{ github.sha }}
+          deployment_package: deploy.zip
