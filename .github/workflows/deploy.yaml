@@ -33,6 +33,16 @@ jobs:
           aws-region: ca-central-1
           audience: sts.amazonaws.com
 
+      - name: Debug OIDC Token Claims
+        run: |
+          IDTOKEN=$(curl -s -H "Authorization: Bearer $ACTIONS_ID_TOKEN_REQUEST_TOKEN" "$ACTIONS_ID_TOKEN_REQUEST_URL" | jq -r '.value')
+          echo "Subject claim: $(echo $IDTOKEN | jq -r '.sub')"
+          echo "Audience claim: $(echo $IDTOKEN | jq -r '.aud')"
+          echo "Issuer claim: $(echo $IDTOKEN | jq -r '.iss')"
+        env:
+          ACTIONS_ID_TOKEN_REQUEST_URL: ${{ steps.configure-aws-credentials.outputs.id-token-request-url }}
+          ACTIONS_ID_TOKEN_REQUEST_TOKEN: ${{ steps.configure-aws-credentials.outputs.id-token }}
+
       - name: Generate deployment package
         run: zip -r deploy.zip . -x '*.git*'
 
