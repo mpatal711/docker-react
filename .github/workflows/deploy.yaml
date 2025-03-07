@@ -36,7 +36,7 @@ jobs:
       - name: Generate deployment package
         run: |
           echo '{
-            "AWSEBDockerrunVersion": "1",
+            "AWSEBDockerrunVersion": "2",
             "Image": {
               "Name": "mpatal/react-test:${{ github.sha }}",
               "Update": "true"
