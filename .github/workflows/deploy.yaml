@@ -34,7 +34,21 @@ jobs:
           aws-region: ca-central-1
 
       - name: Generate deployment package
-        run: zip -r deploy.zip . -x '*.git*'
+        run: |
+          echo '{
+            "AWSEBDockerrunVersion": "1",
+            "Image": {
+              "Name": "mpatal/react-test:${{ github.sha }}",
+              "Update": "true"
+            },
+            "Ports": [
+              {
+                "ContainerPort": 80
+              }
+            ]
+          }' > Dockerrun.aws.json
+          zip -r deploy.zip . -x '*.git*'
+
 
       - name: Deploy to EB
         uses: einaregilsson/beanstalk-deploy@v18
