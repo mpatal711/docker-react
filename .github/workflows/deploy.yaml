@@ -27,7 +27,10 @@ jobs:
           docker run -e CI=true mpatal/react-test npm test
 
       - name: Generate deployment package
-        run: zip -r deploy.zip . -x '*.git*'
+        run: |
+          zip -r deploy.zip . -x '*.git*'
+          zip -j deploy.zip Dockerfile
+
       
       - name: Deploy to EB
         uses: einaregilsson/beanstalk-deploy@v18
