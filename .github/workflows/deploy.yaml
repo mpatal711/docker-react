@@ -37,17 +37,23 @@ jobs:
         run: |
           echo '{
             "AWSEBDockerrunVersion": "2",
-            "Image": {
-              "Name": "mpatal/react-test:${{ github.sha }}",
-              "Update": "true"
-            },
-            "Ports": [
+            "containerDefinitions": [
               {
-                "ContainerPort": 80
+                "name": "frontend",
+                "image": "mpatal/react-test:${{ github.sha }}",
+                "essential": true,
+                "memory": 512,
+                "portMappings": [
+                  {
+                    "hostPort": 80,
+                    "containerPort": 80
+                  }
+                ]
               }
             ]
           }' > Dockerrun.aws.json
           zip -r deploy.zip . -x '*.git*'
+
 
 
       - name: Deploy to EB
