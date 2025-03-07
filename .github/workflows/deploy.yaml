@@ -32,28 +32,27 @@ jobs:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ca-central-1
+      
+      - name: Save Docker image
+        run: docker save mpatal/react-test:${{ github.sha }} > react-test.tar
 
-      - name: Generate deployment package
+      - name: Create Dockerrun.aws.json
         run: |
           echo '{
-            "AWSEBDockerrunVersion": "2",
-            "containerDefinitions": [
+            "AWSEBDockerrunVersion": "1",
+            "Image": {
+              "Name": "react-test.tar",
+              "Update": "false"
+            },
+            "Ports": [
               {
-                "name": "frontend",
-                "image": "Dockerfile",
-                "essential": true,
-                "memory": 512,
-                "portMappings": [
-                  {
-                    "hostPort": 80,
-                    "containerPort": 80
-                  }
-                ]
+                "ContainerPort": 80
               }
             ]
           }' > Dockerrun.aws.json
-          zip -r deploy.zip . -x '*.git*'
 
+      - name: Generate deployment package
+        run: zip -r deploy.zip Dockerrun.aws.json react-test.tar
 
 
       - name: Deploy to EB
