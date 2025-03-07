@@ -31,6 +31,7 @@ jobs:
         with:
           role-to-assume: arn:aws:iam::${{ secrets.AWS_ACCOUNT_ID }}:role/GitHubActionsRole
           aws-region: ca-central-1
+          audience: sts.amazonaws.com
 
       - name: Generate deployment package
         run: zip -r deploy.zip . -x '*.git*'
