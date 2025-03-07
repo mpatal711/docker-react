@@ -40,7 +40,7 @@ jobs:
             "containerDefinitions": [
               {
                 "name": "frontend",
-                "image": "mpatal/react-test:${{ github.sha }}",
+                "image": "Dockerfile",
                 "essential": true,
                 "memory": 512,
                 "portMappings": [
