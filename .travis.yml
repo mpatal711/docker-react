@@ -1,6 +1,8 @@
 dist: focal
 sudo: required
-language: generic
+language: node_js
+node_js:
+  - "lts"
 
 services:
   - docker
