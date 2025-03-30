@@ -15,7 +15,7 @@ function App() {
           target="_blank"
           rel="noopener noreferrer"
         >
-          Minor update!
+          learn react Minor update!
         </a>
       </header>
     </div>
