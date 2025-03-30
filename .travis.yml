@@ -1,16 +1,12 @@
+dist: focal
 sudo: required
+language: generic
+
 services:
   - docker
 
 before_install: 
   - docker build -t mpatal/docker-react -f Dockerfile.dev .
-
-  # Update Bundler to handle default gems correctly
-  - gem install bundler
-  - bundle update --bundler
-
-  # Explicitly install the correct version of logger
-  - gem install logger -v '~> 1.7'
 
 script: 
   - docker run -e CI=true mpatal/docker-react npm run test
