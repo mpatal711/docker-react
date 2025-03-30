@@ -2,7 +2,7 @@ dist: focal
 sudo: required
 language: node_js
 node_js:
-  - "lts"
+  - "22"
 
 services:
   - docker
