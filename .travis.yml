@@ -8,6 +8,13 @@ services:
   - docker
 
 before_install: 
+  # Remove Ruby from the environment (prevent Ruby-related errors)
+  - sudo apt-get remove -y ruby
+  - sudo apt-get autoremove -y
+
+  # Optional: Clean Docker cache to avoid old builds
+  - docker system prune -f
+  
   - docker build -t mpatal/docker-react -f Dockerfile.dev .
 
 script: 
