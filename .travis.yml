@@ -7,3 +7,4 @@ before_install:
 
 script: 
   - docker run -e CI=true mpatal/docker-react npm run test
+
