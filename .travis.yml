@@ -8,3 +8,17 @@ before_install:
 script: 
   - docker run -e CI=true mpatal/docker-react npm run test
 
+deploy:
+  provider: elasticbeanstalk
+  region: "ca-central-1"
+  app: "frontend"
+  env: "Frontend-env-1"
+  bucket_name: "elasticbeanstalk-ca-central-1-337909763072"
+  bucket_path: "frontend"
+  on:
+    branch: master
+  access_key_id: $AWS_ACCESS_KEY
+  secret_access_key: "$AWS_SECRET_KEY"
+
+
+  
